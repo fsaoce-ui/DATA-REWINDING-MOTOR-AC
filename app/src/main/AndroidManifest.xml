@@ -2,6 +2,7 @@
     <application
         android:theme="@android:style/Theme.Material.Light.NoActionBar"
         android:label="DATA REWINDING MOTOR AC"
+        android:icon="@drawable/ic_app"
         android:allowBackup="true"
         android:supportsRtl="true">
         <activity android:name=".MainActivity" android:exported="true">
