@@ -17,7 +17,7 @@ public class MainActivity extends Activity {
   ScrollView page=new ScrollView(this);page.setFillViewport(true);page.setBackgroundColor(Color.rgb(242,246,252));root=vertical();root.setPadding(dp(16),dp(12),dp(16),dp(22));page.addView(root);
   LinearLayout top=horizontal(); TextView logo=txt("⚙",28,Color.WHITE,true);logo.setGravity(Gravity.CENTER);logo.setBackground(shape(blue,16));top.addView(logo,new LinearLayout.LayoutParams(dp(48),dp(48)));
   LinearLayout brand=vertical();brand.setPadding(dp(12),0,0,0);brand.addView(txt("DATA REWINDING",18,navy,true));brand.addView(txt("MOTOR AC  •  CATATAN TEKNIS",10,muted,true));top.addView(brand,new LinearLayout.LayoutParams(0,-2,1));
-  TextView star=txt("★",27,Color.rgb(255,174,0,true);star.setGravity(Gravity.CENTER);top.addView(star);star.setOnClickListener(v->{favOnly=!favOnly;refresh();});root.addView(top);
+  TextView star=txt("★",27,Color.rgb(255,174,0),true);star.setGravity(Gravity.CENTER);top.addView(star);star.setOnClickListener(v->{favOnly=!favOnly;refresh();});root.addView(top);
   LinearLayout hero=vertical();hero.setPadding(dp(18),dp(18),dp(18),dp(18));hero.setBackground(shape(navy,20));LinearLayout.LayoutParams hp=new LinearLayout.LayoutParams(-1,-2);hp.topMargin=dp(16);root.addView(hero,hp);
   hero.addView(txt("PUSAT DATA REWINDING",12,Color.rgb(160,210,255),true));TextView ht=txt("Semua catatan motor AC\ntersimpan rapi.",22,Color.WHITE,true);ht.setPadding(0,dp(6),0,dp(5));hero.addView(ht);hero.addView(txt("Simpan • Cari • Kelola  |  100% Offline",12,Color.WHITE,false));
   LinearLayout actions=horizontal();actions.setPadding(0,dp(14),0,dp(4));root.addView(actions);
