@@ -40,12 +40,54 @@ public class MainActivity extends Activity {
   }
   c.close();if(count==0){LinearLayout empty=vertical();empty.setGravity(Gravity.CENTER);empty.setPadding(dp(10),dp(28),dp(10),dp(28));empty.setBackground(shape(paper,8));empty.addView(txt("▤",34,gold,true));empty.addView(txt("Halaman masih kosong",15,brown,true));empty.addView(txt("Tekan Tambah Halaman untuk menulis catatan pertama.",12,muted,false));list.addView(empty);}
  }
+ String inspectionTemplate(){
+  return "FORM INSPEKSI / REWINDING MOTOR AC\\n"+
+   "========================================\\n"+
+   "IDENTITAS CUSTOMER & PEKERJAAN\\n"+
+   "Customer :\\n"+
+   "Nama Pekerjaan :\\n"+
+   "Tanggal Unit Datang :\\n"+
+   "Tanggal Inspection :\\n"+
+   "Target Delivery :\\n\\n"+
+   "NAME PLATE DETAIL\\n"+
+   "MFG / Merk :\\n"+
+   "TYPE / Model :\\n"+
+   "S/N / Serial Number :\\n"+
+   "POWER :          kW :          HP :\\n"+
+   "VOLT :            Delta :       Star :\\n"+
+   "AMPR / Arus :\\n"+
+   "SPEED :           RPM :\\n"+
+   "FREQ :            Hz :\\n"+
+   "WEIGHT :          KG :\\n"+
+   "INS CLASS :\\n\\n"+
+   "SPARE PART LIST\\n"+
+   "1. Spare Part :          QTY :          Dimensi :          Rekomendasi :\\n"+
+   "2. Spare Part :          QTY :          Dimensi :          Rekomendasi :\\n"+
+   "3. Spare Part :          QTY :          Dimensi :          Rekomendasi :\\n"+
+   "4. Spare Part :          QTY :          Dimensi :          Rekomendasi :\\n"+
+   "5. Spare Part :          QTY :          Dimensi :          Rekomendasi :\\n\\n"+
+   "DATA AWAL SESUAI ACTUAL\\n"+
+   "Slot :\\nGroup :\\nC/group :\\nC/Spend :\\nConductor :\\nTurn :\\nWire/s :\\nKawat Bekas :\\n\\n"+
+   "DATA RUBAHAN / REKOMENDASI\\n"+
+   "Slot :\\nGroup :\\nC/group :\\nC/Spend :\\nConductor :\\nTurn :\\nWire/s :\\nKawat Bekas :\\n\\n"+
+   "KETERANGAN / CATATAN\\n"+
+   "Ukuran stator (ID / OD / Core / DE-NDE) :\\n"+
+   "Connection / Hubungan :\\n"+
+   "Connection / Diagram sambungan :\\n"+
+   "Keterangan tambahan :\\n\\n"+
+   "PEMERIKSAAN & KONTROL\\n"+
+   "Inspection By :\\n"+
+   "Control By :\\n"+
+   "Tanggal :\\n"+
+   "========================================\\n";
+ }
  void edit(Integer id){
   String ot="",ob="",oc="Umum";boolean of=false;if(id!=null){Cursor c=db.getReadableDatabase().rawQuery("SELECT title,body,category,favorite FROM notes WHERE id=?",new String[]{""+id});if(c.moveToFirst()){ot=c.getString(0);ob=c.getString(1);oc=c.getString(2);of=c.getInt(3)==1;}c.close();}
   LinearLayout form=vertical();form.setPadding(dp(18),dp(8),dp(18),0);form.setBackgroundColor(paper);TextView prompt=txt("HALAMAN CATATAN TEKNIK",11,red,true);prompt.setPadding(0,0,0,dp(5));form.addView(prompt);
   EditText title=new EditText(this);title.setSingleLine(true);title.setHint("Judul halaman / catatan");title.setText(ot);title.setTextColor(ink);title.setHintTextColor(muted);title.setBackgroundTintList(ColorStateList.valueOf(gold));form.addView(title);
   Spinner category=new Spinner(this);category.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item,cats));for(int i=0;i<cats.length;i++)if(cats[i].equals(oc))category.setSelection(i);form.addView(category);
-  EditText body=new EditText(this);body.setHint("Tuliskan data motor, ukuran kawat, jumlah lilitan, hasil ukur, dan catatan pekerjaan...");body.setText(ob);body.setTextColor(ink);body.setHintTextColor(muted);body.setMinLines(6);body.setGravity(Gravity.TOP);body.setPadding(dp(8),dp(8),dp(8),dp(8));body.setBackground(shape(Color.rgb(255,253,245),5));form.addView(body);
+  TextView formInfo=txt("FORM INSPEKSI MOTOR AC  •  Isi bagian yang diperlukan",10,muted,false);formInfo.setPadding(0,dp(5),0,dp(7));form.addView(formInfo);
+  EditText body=new EditText(this);body.setHint("Isi formulir inspeksi di sini...");body.setText(id==null?inspectionTemplate():ob);body.setTextColor(ink);body.setHintTextColor(muted);body.setTextSize(13);body.setMinLines(22);body.setGravity(Gravity.TOP);body.setInputType(android.text.InputType.TYPE_CLASS_TEXT|android.text.InputType.TYPE_TEXT_FLAG_MULTI_LINE|android.text.InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);body.setPadding(dp(12),dp(10),dp(12),dp(10));body.setBackground(shape(Color.rgb(255,253,245),5));form.addView(body);
   CheckBox favorite=new CheckBox(this);favorite.setText("Simpan di halaman favorit");favorite.setTextColor(brown);favorite.setChecked(of);form.addView(favorite);
   AlertDialog dialog=new AlertDialog.Builder(this).setTitle(id==null?"Tulis Halaman Baru":"Edit Halaman").setView(form).setNegativeButton("Batal",null).setPositiveButton("Simpan",null).create();
   dialog.setOnShowListener(x->dialog.getButton(-1).setOnClickListener(v->{String t=title.getText().toString().trim(),b=body.getText().toString().trim();if(t.isEmpty()){title.setError("Judul wajib diisi");return;}ContentValues cv=new ContentValues();cv.put("title",t);cv.put("body",b);cv.put("category",cats[category.getSelectedItemPosition()]);cv.put("favorite",favorite.isChecked()?1:0);cv.put("updated",System.currentTimeMillis());if(id==null)db.getWritableDatabase().insert("notes",null,cv);else db.getWritableDatabase().update("notes",cv,"id=?",new String[]{""+id});dialog.dismiss();refresh();}));dialog.show();
